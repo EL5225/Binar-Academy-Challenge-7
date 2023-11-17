@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 20px;
+        padding: 20px;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: start;
+        width: 100%;
+        gap: 20px;
+      }
+
+      .notification {
+        padding: 8px;
+        border: 2px solid black;
+        border-radius: 5px;
+        width: 250px;
+        text-align: center;
+      }
+
+      ul {
+        display: flex;
+        flex-direction: column;
+        list-style: none;
+        gap: 10px;
+      }
+      li {
+        width: 250px;
+        border: 2px solid gray;
+        border-radius: 5px;
+      }
+
+      .judul-list {
+        padding: 8px;
+        background-color: lightblue;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+      }
+
+      .content-list {
+        padding: 8px;
+        background-color: lightcyan;
+        border-radius: 5px;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="container">
+      <h1 class="notification">Notifikasi</h1>
+
+      <div class="notification-list">
+        <ul id="notification">
+          <% user.notifications.map((item) => { %>
+          <li>
+            <p class="judul-list"><%= item.title %></p>
+            <p class="content-list"><%= item.content %></p>
+          </li>
+          <% }); %>
+        </ul>
+      </div>
+
+      <a href="/update-password" target="_blank">Update Password</a>
+    </section>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      const user_id = "<%= user.id %>";
+
+      socket.on(`notification_${user_id}`, (notif) => {
+        console.log("Terhubung");
+        const liEl = document.createElement("li");
+        const ulEl = document.getElementById("notification");
+        liEl.innerHTML = `
+          <p class="judul-list">${notif.title}</p>
+          <p class="content-list">${notif.content}</p>
+        `;
+        ulEl.appendChild(liEl);
+      });
+    </script>
+  </body>
+</html>
